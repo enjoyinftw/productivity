@@ -9,6 +9,8 @@ const signup = async (req, res) => {
     res.cookie('auth_token', token, {
       maxAge: 604800000,
       httpOnly: true,
+      sameSite: 'none',
+      secure: true,
     });
     res.status(201).json({ code: 201, isRegistered: true });
   } catch (e) {
@@ -80,6 +82,8 @@ const login = async (req, res) => {
       res.cookie('auth_token', token, {
         maxAge: 604800000,
         httpOnly: true,
+        sameSite: 'none',
+        secure: true,
       });
       res.status(200).json({
         code: 200,
