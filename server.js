@@ -8,7 +8,7 @@ app.use(express.json());
 app.use(
   cors({
     credentials: true,
-    origin: 'https://gregarious-cocada-c96629.netlify.app/',
+    origin: 'https://gregarious-cocada-c96629.netlify.app',
   })
 );
 app.use(express.urlencoded({ extended: true }));
