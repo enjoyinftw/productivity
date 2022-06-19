@@ -49,7 +49,6 @@ const Login = () => {
   }, [submitCount]);
 
   const submitForm = (event) => {
-    console.log('submitform');
     event.preventDefault();
     const validatedEmail = validateEmail(userInput.email);
     const validatedPassword = validatePassword(userInput.password);
