@@ -43,10 +43,8 @@ const DragAndDrop = ({ content }) => {
         minWidth: '250px',
         width: '250px',
       },
-      columnHead: {
-        border: '1px solid',
-        borderColor: 'primary.main',
-      },
+      columnHead: {},
+      rowItem: {},
     },
     menuListItem: [
       {
@@ -163,7 +161,15 @@ const DragAndDrop = ({ content }) => {
                         <Card
                           {...provided.dragHandleProps}
                           variant='outlined'
-                          sx={{ ...style.DragAndDrop.columnHead }}>
+                          sx={{
+                            border: snapshot.isDragging
+                              ? '3px solid '
+                              : '1px solid',
+                            borderColor: snapshot.isDragging
+                              ? 'secondary.main'
+                              : 'primary.main',
+                            ...style.DragAndDrop.columnHead,
+                          }}>
                           <CardContent
                             sx={{
                               padding: '10px 0 10px 0',
@@ -210,8 +216,13 @@ const DragAndDrop = ({ content }) => {
                                       {...provided.draggableProps}
                                       {...provided.dragHandleProps}
                                       sx={{
-                                        border: '1px solid',
-                                        borderColor: 'primary.main',
+                                        ...style.DragAndDrop.rowItem,
+                                        border: snapshot.isDragging
+                                          ? '3px solid '
+                                          : '1px solid',
+                                        borderColor: snapshot.isDragging
+                                          ? 'secondary.main'
+                                          : 'primary.main',
 
                                         ...provided.draggableProps.style,
                                       }}>
