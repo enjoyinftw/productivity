@@ -7,6 +7,8 @@
 /coverage
 
 # misc
+client/.env.development
+client/.env.production
 .env
 */*.env
 .DS_Store
