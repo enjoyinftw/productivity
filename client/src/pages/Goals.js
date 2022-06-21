@@ -5,7 +5,28 @@ import { static_items } from '../component/DragAndDrop/data';
 import axios from 'axios';
 
 const Goals = () => {
-  const [userBoard, setUserBoard] = useState(static_items);
+  const [isLoading, setIsLoading] = useState(false);
+  const [userBoard, setUserBoard] = useState([]);
+  const [boardData, setBoardData] = useState({});
+  const API_URL = process.env.REACT_APP_API_URL;
+
+  useEffect(() => {
+    const getData = async () => {
+      setIsLoading(true);
+      try {
+        const { data } = await axios.get(`${API_URL}/api/v1/kanban/findall`, {
+          withCredentials: true,
+          credentials: 'include',
+        });
+        setBoardData(data);
+        setUserBoard(data.boardData[0]);
+      } catch (e) {
+        console.log(e);
+      }
+      setIsLoading(false);
+    };
+    getData();
+  }, []);
 
   return (
     <div>
@@ -17,7 +38,18 @@ const Goals = () => {
         sx={{ paddingTop: '5px', paddingBottom: '5px' }}>
         DragAndDrop Demo. Add, edit, save and delete function in the future.
       </Typography>
-      <DragAndDrop content={userBoard} />
+      {isLoading ? (
+        <Typography
+          textAlign='center'
+          color='info'
+          variant='h6'
+          component='h3'
+          sx={{ paddingTop: '5px', paddingBottom: '5px' }}>
+          loading
+        </Typography>
+      ) : (
+        <DragAndDrop userBoard={userBoard} />
+      )}
     </div>
   );
 };

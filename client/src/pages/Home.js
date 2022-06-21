@@ -1,10 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Typography } from '@mui/material';
+import axios from 'axios';
 import DragAndDrop from '../component/DragAndDrop/DragAndDrop';
 import { static_items } from '../component/DragAndDrop/data';
 
 const Home = () => {
-  const [userBoard, setUserBoard] = useState(static_items);
+  const demoData = {};
+  demoData['content'] = static_items;
+
+  const [userBoard, setUserBoard] = useState(demoData);
 
   return (
     <div>
@@ -25,7 +29,8 @@ const Home = () => {
         Sign Up, Login and Logout functional, but dont provide additional
         features.
       </Typography>
-      <DragAndDrop content={userBoard} />
+
+      <DragAndDrop userBoard={userBoard} />
     </div>
   );
 };

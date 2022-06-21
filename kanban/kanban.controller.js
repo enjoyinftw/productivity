@@ -13,7 +13,7 @@ const create = async (req, res) => {
     const board = new Kanban(fullData);
     await board.save();
 
-    res.status(201).json({ code: 201, isCreated: true, data: board });
+    res.status(201).json({ code: 201, isCreated: true, boardData: board });
   } catch (e) {
     console.log(e);
     res.status(400).json({
@@ -34,7 +34,7 @@ const findAll = async (req, res) => {
     res.status(200).json({
       code: 200,
       isFound: true,
-      data: boardInfo,
+      boardData: boardInfo,
     });
   } catch (e) {
     console.log(e);
@@ -58,7 +58,7 @@ const findByName = async (req, res) => {
     res.status(200).json({
       code: 200,
       isFound: true,
-      data: boardInfo,
+      boardData: boardInfo,
     });
   } catch (e) {
     console.log(e);
@@ -82,7 +82,7 @@ const updateone = async (req, res) => {
         new: true,
       }
     );
-    res.status(200).json({ code: 200, isUpdated: true, data: boardInfo });
+    res.status(200).json({ code: 200, isUpdated: true, boardData: boardInfo });
   } catch (e) {
     console.log(e);
   }
@@ -93,7 +93,9 @@ const deleteone = async (req, res) => {
     const data = req.body;
     const deleteBoard = await Kanban.findByIdAndDelete({ _id: data._id });
 
-    res.status(200).json({ code: 200, isDeleted: true, data: deleteBoard });
+    res
+      .status(200)
+      .json({ code: 200, isDeleted: true, boardData: deleteBoard });
   } catch (e) {
     console.log(e);
   }

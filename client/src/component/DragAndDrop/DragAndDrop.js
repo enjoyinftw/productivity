@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import {
   Box,
@@ -15,9 +15,8 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const DragAndDrop = ({ content }) => {
-  const [itemList, setitemList] = useState(content);
-
+const DragAndDrop = ({ userBoard }) => {
+  const [itemList, setItemList] = useState(userBoard.content);
   const reorder = (list, startIndex, endIndex) => {
     const result = Array.from(list);
     const [removed] = result.splice(startIndex, 1);
@@ -52,19 +51,18 @@ const DragAndDrop = ({ content }) => {
     const destIndex = result.destination.index;
     if (result.type === 'droppableColumn') {
       const newItems = reorder(itemList, sourceIndex, destIndex);
-      setitemList(newItems);
+      setItemList(newItems);
     } else if (result.type === 'droppableSubColumn') {
       const itemSubItemMap = itemList.reduce((acc, item) => {
-        acc[item.id] = item.subItems;
+        acc[item._id] = item.columnitems;
         return acc;
       }, {});
 
-      const sourceParentId = parseInt(result.source.droppableId);
-      const destParentId = parseInt(result.destination.droppableId);
+      const sourceParentId = result.source.droppableId;
+      const destParentId = result.destination.droppableId;
 
       const sourceSubItems = itemSubItemMap[sourceParentId];
       const destSubItems = itemSubItemMap[destParentId];
-
       let newItems = [...itemList];
 
       if (sourceParentId === destParentId) {
@@ -75,13 +73,13 @@ const DragAndDrop = ({ content }) => {
         );
 
         newItems = newItems.map((item) => {
-          if (+item.id === +sourceParentId) {
-            item.subItems = reorderedSubItems;
+          if (item._id === sourceParentId) {
+            item.columnitems = reorderedSubItems;
           }
           return item;
         });
 
-        setitemList(newItems);
+        setItemList(newItems);
       } else {
         let newSourceSubItems = [...sourceSubItems];
         const [draggedItem] = newSourceSubItems.splice(sourceIndex, 1);
@@ -89,213 +87,234 @@ const DragAndDrop = ({ content }) => {
         let newDestSubItems = [...destSubItems];
         newDestSubItems.splice(destIndex, 0, draggedItem);
         newItems.map((item) => {
-          if (+item.id === sourceParentId) {
-            item.subItems = newSourceSubItems;
-          } else if (+item.id === destParentId) {
-            item.subItems = newDestSubItems;
+          if (item._id === sourceParentId) {
+            item.columnitems = newSourceSubItems;
+          } else if (item._id === destParentId) {
+            item.columnitems = newDestSubItems;
           }
           return item;
         });
-        setitemList(newItems);
+        setItemList(newItems);
       }
     }
   };
 
-  return (
-    <Box sx={{ ...style.DragAndDrop.body }}>
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Grid container>
-          <Droppable
-            droppableId='all-droppables'
-            direction='horizontal'
-            type='droppableColumn'>
-            {(provided, snapshot) => (
-              <Box
-                sx={{ display: 'flex' }}
-                {...provided.droppableProps}
-                ref={provided.innerRef}>
-                {itemList.map((column, colIndex) => (
-                  <Draggable
-                    key={column.id}
-                    draggableId={column.id}
-                    index={colIndex}>
-                    {(provided, snapshot) => (
-                      <Grid
-                        {...provided.draggableProps}
-                        ref={provided.innerRef}
-                        key={column.id}
-                        id={column.id}
-                        index={colIndex}
-                        sx={{
-                          ...style.DragAndDrop.column,
-                        }}
-                        item>
-                        <Card
-                          {...provided.dragHandleProps}
-                          variant='outlined'
-                          sx={{
-                            border: snapshot.isDragging
-                              ? '3px solid '
-                              : '1px solid',
-                            borderColor: snapshot.isDragging
-                              ? 'secondary.main'
-                              : 'primary.main',
-                            ...style.DragAndDrop.columnHead,
-                          }}>
-                          <CardContent
+  const displayDragAndDrop = (itemList) => {
+    if (itemList) {
+      return (
+        <Box sx={{ ...style.DragAndDrop.body }}>
+          <DragDropContext onDragEnd={onDragEnd}>
+            <Grid container>
+              <Droppable
+                droppableId='all-droppables'
+                direction='horizontal'
+                type='droppableColumn'>
+                {(provided, snapshot) => (
+                  <Box
+                    sx={{ display: 'flex' }}
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}>
+                    {itemList.map((column, colIndex) => (
+                      <Draggable
+                        key={column._id}
+                        draggableId={column._id}
+                        index={colIndex}>
+                        {(provided, snapshot) => (
+                          <Grid
+                            {...provided.draggableProps}
+                            ref={provided.innerRef}
+                            key={column._id}
+                            id={column._id}
+                            index={colIndex}
                             sx={{
-                              position: 'relative',
-
-                              zIndex: 'auto',
-                              padding: '10px 0 0 0',
-                              '&:last-child': {
-                                paddingBottom: '10px',
-                              },
-                            }}>
-                            <Typography
-                              color='primary'
-                              id={column.id}
-                              sx={{ textAlign: 'center', width: '100%' }}
-                              variant='h5'
-                              component='h2'>
-                              {column.content}
-                            </Typography>
-                          </CardContent>
-                          <CardActions sx={{ paddingTop: 0 }} disableSpacing>
-                            <Stack
-                              width={'100%'}
-                              direction='row'
-                              justifyContent='center'
-                              alignItems='center'>
-                              <IconButton
-                                color='secondary'
-                                size='small'
-                                aria-label='add column'>
-                                <AddCircleIcon />
-                              </IconButton>
-                              <IconButton
-                                color='secondary'
-                                size='small'
-                                aria-label='edit column name'>
-                                <EditIcon />
-                              </IconButton>
-                              <IconButton
-                                color='secondary'
-                                size='small'
-                                aria-label='delete column'>
-                                <DeleteIcon />
-                              </IconButton>
-                            </Stack>
-                          </CardActions>
-                        </Card>
-                        <Droppable
-                          droppableId={column.id}
-                          type='droppableSubColumn'>
-                          {(provided, snapshot) => (
-                            <Box
-                              ref={provided.innerRef}
+                              ...style.DragAndDrop.column,
+                            }}
+                            item>
+                            <Card
+                              {...provided.dragHandleProps}
+                              variant='outlined'
                               sx={{
-                                minHeight: '25px',
-                                backgroundColor: snapshot.isDraggingOver
-                                  ? 'primary.main'
-                                  : '',
+                                border: snapshot.isDragging
+                                  ? '3px solid '
+                                  : '1px solid',
+                                borderColor: snapshot.isDragging
+                                  ? 'secondary.main'
+                                  : 'primary.main',
+                                ...style.DragAndDrop.columnHead,
                               }}>
-                              {column.subItems.map((rowItem, rowIndex) => (
-                                <Draggable
-                                  key={rowItem.id}
-                                  draggableId={rowItem.id}
-                                  index={rowIndex}>
-                                  {(provided, snapshot) => (
-                                    <Card
-                                      ref={provided.innerRef}
-                                      {...provided.draggableProps}
-                                      {...provided.dragHandleProps}
-                                      sx={{
-                                        ...style.DragAndDrop.rowItem,
-                                        border: snapshot.isDragging
-                                          ? '3px solid '
-                                          : '1px solid',
-                                        borderColor: snapshot.isDragging
-                                          ? 'secondary.main'
-                                          : 'primary.main',
+                              <CardContent
+                                sx={{
+                                  position: 'relative',
 
-                                        ...provided.draggableProps.style,
-                                      }}>
-                                      <CardContent
-                                        sx={{
-                                          paddingBottom: '0',
-                                          '&:last-child': {
-                                            paddingBottom: '0',
-                                          },
-                                        }}>
-                                        <Stack
-                                          textAlign='center'
-                                          justifyContent='center'
-                                          direction='column'>
-                                          <Typography
-                                            variant='body1'
-                                            color='primary'
-                                            component='p'>
-                                            {rowItem.content}
-                                          </Typography>
-                                          <Typography
-                                            variant='body2'
-                                            color='primary'
-                                            component='p'>
-                                            {rowItem.description}
-                                          </Typography>
-                                        </Stack>
-                                      </CardContent>
+                                  zIndex: 'auto',
+                                  padding: '10px 0 0 0',
+                                  '&:last-child': {
+                                    paddingBottom: '10px',
+                                  },
+                                }}>
+                                <Typography
+                                  color='primary'
+                                  id={column._id}
+                                  sx={{ textAlign: 'center', width: '100%' }}
+                                  variant='h5'
+                                  component='h2'>
+                                  {column.columnname}
+                                </Typography>
+                              </CardContent>
+                              <CardActions
+                                sx={{ paddingTop: 0 }}
+                                disableSpacing>
+                                <Stack
+                                  width={'100%'}
+                                  direction='row'
+                                  justifyContent='center'
+                                  alignItems='center'>
+                                  <IconButton
+                                    color='secondary'
+                                    size='small'
+                                    aria-label='add column'>
+                                    <AddCircleIcon />
+                                  </IconButton>
+                                  <IconButton
+                                    color='secondary'
+                                    size='small'
+                                    aria-label='edit column name'>
+                                    <EditIcon />
+                                  </IconButton>
+                                  <IconButton
+                                    color='secondary'
+                                    size='small'
+                                    aria-label='delete column'>
+                                    <DeleteIcon />
+                                  </IconButton>
+                                </Stack>
+                              </CardActions>
+                            </Card>
+                            <Droppable
+                              droppableId={column._id}
+                              type='droppableSubColumn'>
+                              {(provided, snapshot) => (
+                                <Box
+                                  ref={provided.innerRef}
+                                  sx={{
+                                    minHeight: '25px',
+                                    backgroundColor: snapshot.isDraggingOver
+                                      ? 'primary.main'
+                                      : '',
+                                  }}>
+                                  {column.columnitems.map(
+                                    (rowItem, rowIndex) => (
+                                      <Draggable
+                                        key={rowItem._id}
+                                        draggableId={rowItem._id}
+                                        index={rowIndex}>
+                                        {(provided, snapshot) => (
+                                          <Card
+                                            ref={provided.innerRef}
+                                            {...provided.draggableProps}
+                                            {...provided.dragHandleProps}
+                                            sx={{
+                                              ...style.DragAndDrop.rowItem,
+                                              border: snapshot.isDragging
+                                                ? '3px solid '
+                                                : '1px solid',
+                                              borderColor: snapshot.isDragging
+                                                ? 'secondary.main'
+                                                : 'primary.main',
 
-                                      <CardActions disableSpacing>
-                                        <Stack
-                                          width={'100%'}
-                                          direction='row'
-                                          justifyContent='center'
-                                          alignItems='center'>
-                                          <IconButton
-                                            color='secondary'
-                                            size='small'
-                                            aria-label='add row'>
-                                            <AddCircleIcon />
-                                          </IconButton>
-                                          <IconButton
-                                            color='secondary'
-                                            size='small'
-                                            aria-label='edit row'>
-                                            <EditIcon />
-                                          </IconButton>
-                                          <IconButton
-                                            color='secondary'
-                                            size='small'
-                                            aria-label='delete row'>
-                                            <DeleteIcon />
-                                          </IconButton>
-                                        </Stack>
-                                      </CardActions>
-                                      {provided.placeholder}
-                                    </Card>
+                                              ...provided.draggableProps.style,
+                                            }}>
+                                            <CardContent
+                                              sx={{
+                                                paddingBottom: '0',
+                                                '&:last-child': {
+                                                  paddingBottom: '0',
+                                                },
+                                              }}>
+                                              <Stack
+                                                textAlign='center'
+                                                justifyContent='center'
+                                                direction='column'>
+                                                <Typography
+                                                  variant='body1'
+                                                  color='primary'
+                                                  component='p'>
+                                                  {rowItem.rowname}
+                                                </Typography>
+                                                <Typography
+                                                  variant='body2'
+                                                  color='primary'
+                                                  component='p'>
+                                                  {rowItem.rowdescription}
+                                                </Typography>
+                                              </Stack>
+                                            </CardContent>
+
+                                            <CardActions disableSpacing>
+                                              <Stack
+                                                width={'100%'}
+                                                direction='row'
+                                                justifyContent='center'
+                                                alignItems='center'>
+                                                <IconButton
+                                                  color='secondary'
+                                                  size='small'
+                                                  aria-label='add row'>
+                                                  <AddCircleIcon />
+                                                </IconButton>
+                                                <IconButton
+                                                  color='secondary'
+                                                  size='small'
+                                                  aria-label='edit row'>
+                                                  <EditIcon />
+                                                </IconButton>
+                                                <IconButton
+                                                  color='secondary'
+                                                  size='small'
+                                                  aria-label='delete row'>
+                                                  <DeleteIcon />
+                                                </IconButton>
+                                              </Stack>
+                                            </CardActions>
+                                            {provided.placeholder}
+                                          </Card>
+                                        )}
+                                      </Draggable>
+                                    )
                                   )}
-                                </Draggable>
-                              ))}
-                              {provided.placeholder}
-                            </Box>
-                          )}
-                        </Droppable>
-                        {provided.placeholder}
-                      </Grid>
-                    )}
-                  </Draggable>
-                ))}
+                                  {provided.placeholder}
+                                </Box>
+                              )}
+                            </Droppable>
+                            {provided.placeholder}
+                          </Grid>
+                        )}
+                      </Draggable>
+                    ))}
 
-                {provided.placeholder}
-              </Box>
-            )}
-          </Droppable>
-        </Grid>
-      </DragDropContext>
-    </Box>
-  );
+                    {provided.placeholder}
+                  </Box>
+                )}
+              </Droppable>
+            </Grid>
+          </DragDropContext>
+        </Box>
+      );
+    } else {
+      return (
+        <Typography
+          textAlign='center'
+          color='info'
+          variant='h6'
+          component='h3'
+          sx={{ paddingTop: '5px', paddingBottom: '5px' }}>
+          Waiting for data
+        </Typography>
+      );
+    }
+  };
+
+  return <>{displayDragAndDrop(itemList)} </>;
 };
 
 export default DragAndDrop;

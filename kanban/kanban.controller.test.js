@@ -44,8 +44,8 @@ describe('kanban controller', () => {
       .send(validData);
 
     expect(body.code).toEqual(201);
-    expect(body.data).toBeDefined();
-    expect(body.data.name).toBe('hello');
+    expect(body.boardData).toBeDefined();
+    expect(body.boardData.name).toBe('hello');
   });
 
   it('finds all entries successfully', async () => {
@@ -73,9 +73,9 @@ describe('kanban controller', () => {
       .get('/api/v1/kanban/findAll')
       .set('Cookie', [`auth_token=${token}`]);
 
-    expect(body.data.length).toBe(2);
-    expect(body.data[0].name).toBe('hello');
-    expect(body.data[0].content).toBeDefined();
+    expect(body.boardData.length).toBe(2);
+    expect(body.boardData[0].name).toBe('hello');
+    expect(body.boardData[0].content).toBeDefined();
   });
 
   it('finds one entry by name', async () => {
@@ -106,9 +106,9 @@ describe('kanban controller', () => {
       .set('Cookie', [`auth_token=${token}`])
       .send(validName);
 
-    expect(body.data.length).toBe(1);
-    expect(body.data[0].name).toBe('hello2');
-    expect(body.data[0].content).toBeDefined();
+    expect(body.boardData.length).toBe(1);
+    expect(body.boardData[0].name).toBe('hello2');
+    expect(body.boardData[0].content).toBeDefined();
   });
 
   it('finds one entry and updates it', async () => {
@@ -125,9 +125,9 @@ describe('kanban controller', () => {
       .set('Cookie', [`auth_token=${token}`])
       .send(validData1);
 
-    const { data } = validEntry1.body;
+    const { boardData } = validEntry1.body;
 
-    const updatedData = { ...data, ...staticItem2 };
+    const updatedData = { ...boardData, ...staticItem2 };
 
     const { body } = await request(app)
       .put('/api/v1/kanban/updateone')
@@ -136,8 +136,8 @@ describe('kanban controller', () => {
 
     expect(body.code).toBe(200);
     expect(body.isUpdated).toBeTruthy();
-    expect(body.data.name).toBe('hello2');
-    expect(body.data.content.length).toBe(2);
+    expect(body.boardData.name).toBe('hello2');
+    expect(body.boardData.content.length).toBe(2);
   });
 
   it('finds and deletes one', async () => {
@@ -154,7 +154,7 @@ describe('kanban controller', () => {
       .set('Cookie', [`auth_token=${token}`])
       .send(validData1);
 
-    const validId = { _id: validEntry1.body.data._id };
+    const validId = { _id: validEntry1.body.boardData._id };
 
     const { body } = await request(app)
       .delete('/api/v1/kanban/delete')
