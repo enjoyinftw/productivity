@@ -26,7 +26,7 @@ router.get('/accounts/logout', logout);
 router.post('/kanban/create', create);
 router.get('/kanban/findall', findAll);
 router.get('/kanban/findbyname', findByName);
-router.put('/kanban/update', updateone);
+router.put('/kanban/updateone', updateone);
 router.delete('/kanban/delete', deleteone);
 
 module.exports = router;

@@ -5,8 +5,8 @@ const User = require('./user.model.js');
 const { setUp, dropCollections, dropDatabase } = require('../setup/db.js');
 
 const userData = {
-  username: 'enjoyin',
-  email: 'enjoyin@gmail.com',
+  username: '342in',
+  email: 'enterteyin@gmerteil.com',
   password: 'lolrofl1234',
 };
 

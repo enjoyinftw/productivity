@@ -19,25 +19,25 @@ const staticItem2 = {
       columnname: 'new phone2',
       columnitems: [
         {
-          rowname: 'good phone',
-          rowdescription: 'very nice features',
+          rowname: 'good phone2',
+          rowdescription: 'very nice features2',
         },
         {
-          rowname: 'good phone',
-          rowdescription: 'very nice features',
+          rowname: 'good phone3',
+          rowdescription: 'very nice features3',
         },
       ],
     },
     {
-      columnname: 'new phone23',
+      columnname: 'new phone232',
       columnitems: [
         {
-          rowname: 'good phone',
-          rowdescription: 'very nice features',
+          rowname: 'good phone33',
+          rowdescription: 'very nice features33',
         },
         {
           rowname: 'good phone',
-          rowdescription: 'very nice features',
+          rowdescription: 'very nice features33',
         },
       ],
     },

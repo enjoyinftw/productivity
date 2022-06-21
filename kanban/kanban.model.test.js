@@ -47,8 +47,6 @@ describe('Kanban', () => {
     const validBoard = new Kanban(boardData);
     const savedBoard = await validBoard.save();
 
-    console.log(savedBoard);
-
     expect(savedBoard.name).toBe(boardData.name);
     expect(savedBoard.userid).toBe(boardData.userid);
     expect(savedBoard.position).toBe(boardData.position);
@@ -70,8 +68,6 @@ describe('Kanban', () => {
 
     const validBoard = new Kanban(boardData);
     const savedBoard = await validBoard.save();
-
-    console.log(savedBoard);
 
     expect(savedBoard.name).toBe(boardData.name);
     expect(savedBoard.userid).toBe(boardData.userid);

@@ -13,7 +13,7 @@ const create = async (req, res) => {
     const board = new Kanban(fullData);
     await board.save();
 
-    res.status(201).json({ code: 201, isCreated: true, boardInfo: board });
+    res.status(201).json({ code: 201, isCreated: true, data: board });
   } catch (e) {
     console.log(e);
     res.status(400).json({
@@ -34,7 +34,7 @@ const findAll = async (req, res) => {
     res.status(200).json({
       code: 200,
       isFound: true,
-      boardInfo: boardInfo,
+      data: boardInfo,
     });
   } catch (e) {
     console.log(e);
@@ -58,7 +58,7 @@ const findByName = async (req, res) => {
     res.status(200).json({
       code: 200,
       isFound: true,
-      boardInfo: boardInfo,
+      data: boardInfo,
     });
   } catch (e) {
     console.log(e);
@@ -73,16 +73,16 @@ const findByName = async (req, res) => {
 const updateone = async (req, res) => {
   try {
     const data = req.body;
-    const goalInfo = await Goal.findOneAndUpdate(
+    const boardInfo = await Kanban.findOneAndUpdate(
       { _id: data._id },
       {
-        $set: { goalname: data.goalname, goalitems: data.goalitems },
+        $set: { name: data.name, content: data.content },
       },
       {
         new: true,
       }
     );
-    res.status(200).json({ code: 200, isUpdated: true, data: goalInfo });
+    res.status(200).json({ code: 200, isUpdated: true, data: boardInfo });
   } catch (e) {
     console.log(e);
   }
@@ -91,8 +91,9 @@ const updateone = async (req, res) => {
 const deleteone = async (req, res) => {
   try {
     const data = req.body;
-    const deleteGoal = await Goal.findByIdAndDelete({ _id: data._id });
-    res.status(200).json({ code: 200, isDeleted: true, data: deleteGoal });
+    const deleteBoard = await Kanban.findByIdAndDelete({ _id: data._id });
+
+    res.status(200).json({ code: 200, isDeleted: true, data: deleteBoard });
   } catch (e) {
     console.log(e);
   }

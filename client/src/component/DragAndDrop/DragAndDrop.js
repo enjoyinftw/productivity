@@ -14,14 +14,9 @@ import {
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import MenuListPop from '../userinterface/MenuListPop';
 
 const DragAndDrop = ({ content }) => {
   const [itemList, setitemList] = useState(content);
-
-  const handleButtonClick = (event) => {
-    console.log('nice click!');
-  };
 
   const reorder = (list, startIndex, endIndex) => {
     const result = Array.from(list);
@@ -35,7 +30,7 @@ const DragAndDrop = ({ content }) => {
       body: {
         backgroundColor: '#F9F7F7',
         width: 'max-content',
-        minWidth: '100%',
+        minWidth: '80%',
         overflowX: 'hidden',
         padding: '10px 50px',
       },
@@ -46,29 +41,6 @@ const DragAndDrop = ({ content }) => {
       columnHead: {},
       rowItem: {},
     },
-    menuListItem: [
-      {
-        id: 'add',
-        color: 'secondary',
-        onClick: handleButtonClick,
-        icon: <AddCircleIcon />,
-        ariaLabel: 'add button',
-      },
-      {
-        id: 'edit',
-        color: 'secondary',
-        onClick: handleButtonClick,
-        icon: <EditIcon />,
-        ariaLabel: 'edit button',
-      },
-      {
-        id: 'delete',
-        color: 'secondary',
-        onClick: handleButtonClick,
-        icon: <DeleteIcon />,
-        ariaLabel: 'delete button',
-      },
-    ],
   };
 
   const onDragEnd = (result) => {
@@ -172,26 +144,49 @@ const DragAndDrop = ({ content }) => {
                           }}>
                           <CardContent
                             sx={{
-                              padding: '10px 0 10px 0',
+                              position: 'relative',
+
+                              zIndex: 'auto',
+                              padding: '10px 0 0 0',
                               '&:last-child': {
                                 paddingBottom: '10px',
                               },
                             }}>
-                            <Stack
-                              direction='row'
-                              justifyContent='space-between'
-                              alignItems='center'>
-                              <Typography
-                                color='primary'
-                                id={column.id}
-                                sx={{ flex: 1, textAlign: 'center' }}
-                                variant='h5'
-                                component='h2'>
-                                {column.content}
-                              </Typography>
-                              <MenuListPop menuItems={style.menuListItem} />
-                            </Stack>
+                            <Typography
+                              color='primary'
+                              id={column.id}
+                              sx={{ textAlign: 'center', width: '100%' }}
+                              variant='h5'
+                              component='h2'>
+                              {column.content}
+                            </Typography>
                           </CardContent>
+                          <CardActions sx={{ paddingTop: 0 }} disableSpacing>
+                            <Stack
+                              width={'100%'}
+                              direction='row'
+                              justifyContent='center'
+                              alignItems='center'>
+                              <IconButton
+                                color='secondary'
+                                size='small'
+                                aria-label='add column'>
+                                <AddCircleIcon />
+                              </IconButton>
+                              <IconButton
+                                color='secondary'
+                                size='small'
+                                aria-label='edit column name'>
+                                <EditIcon />
+                              </IconButton>
+                              <IconButton
+                                color='secondary'
+                                size='small'
+                                aria-label='delete column'>
+                                <DeleteIcon />
+                              </IconButton>
+                            </Stack>
+                          </CardActions>
                         </Card>
                         <Droppable
                           droppableId={column.id}
@@ -261,19 +256,19 @@ const DragAndDrop = ({ content }) => {
                                           <IconButton
                                             color='secondary'
                                             size='small'
-                                            aria-label='add'>
+                                            aria-label='add row'>
                                             <AddCircleIcon />
                                           </IconButton>
                                           <IconButton
                                             color='secondary'
                                             size='small'
-                                            aria-label='edit'>
+                                            aria-label='edit row'>
                                             <EditIcon />
                                           </IconButton>
                                           <IconButton
                                             color='secondary'
                                             size='small'
-                                            aria-label='delete'>
+                                            aria-label='delete row'>
                                             <DeleteIcon />
                                           </IconButton>
                                         </Stack>
