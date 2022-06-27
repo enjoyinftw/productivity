@@ -137,7 +137,7 @@ describe('kanban controller', () => {
     expect(body.code).toBe(200);
     expect(body.isUpdated).toBeTruthy();
     expect(body.boardData.name).toBe('hello2');
-    expect(body.boardData.content.length).toBe(2);
+    expect(body.boardData.content.length).toBe(6);
   });
 
   it('finds and deletes one', async () => {

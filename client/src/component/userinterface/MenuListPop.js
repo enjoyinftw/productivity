@@ -8,9 +8,11 @@ import {
   MenuList,
   MenuItem,
   ClickAwayListener,
+  Stack,
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
+/*
 const exampleData = [
   {
     id: 'add',
@@ -40,8 +42,8 @@ const exampleData = [
     ariaLabel: 'delete button',
   },
 ];
-
-const MenuListPop = ({ menuItems }) => {
+*/
+const MenuListPop = ({ menuItems, id }) => {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
   const prevOpen = useRef(null);
@@ -71,6 +73,7 @@ const MenuListPop = ({ menuItems }) => {
     }
     setOpen(false);
   };
+
   return (
     <>
       <Button
@@ -88,7 +91,7 @@ const MenuListPop = ({ menuItems }) => {
         open={open}
         anchorEl={anchorRef.current}
         role={undefined}
-        placement='bottom-end'
+        placement='right'
         transition
         disablePortal>
         {({ TransitionProps, placement }) => (
@@ -105,24 +108,31 @@ const MenuListPop = ({ menuItems }) => {
                     border: '1px solid',
                     borderColor: 'primary.main',
                     zIndex: '2',
+                    borderRadous: '4px',
                   }}
                   autoFocusItem={open}
                   id='compositon-menu'
                   aria-labelledby='composition-button'
                   onKeyDown={handleListKeyDown}>
-                  {menuItems.map((menuItem) => (
-                    <MenuItem
-                      key={menuItem.id}
-                      onClick={(event) => {
-                        handleClose(event);
-                        menuItem.onClick(event);
-                      }}
-                      aria-label={menuItem.ariaLabel}>
-                      <IconButton size='small' color={menuItem.color}>
-                        {menuItem.icon}
-                      </IconButton>
-                    </MenuItem>
-                  ))}
+                  <Stack direction='row'>
+                    {menuItems.map((menuItem, index) => (
+                      <MenuItem
+                        sx={{ padding: '0' }}
+                        key={index}
+                        aria-label={menuItem.ariaLabel}>
+                        <IconButton
+                          name={id}
+                          onClick={(event) => {
+                            handleClose(event);
+                            menuItem.onClick(event);
+                          }}
+                          size='small'
+                          color={menuItem.color}>
+                          {menuItem.icon}
+                        </IconButton>
+                      </MenuItem>
+                    ))}
+                  </Stack>
                 </MenuList>
               </ClickAwayListener>
             </Paper>

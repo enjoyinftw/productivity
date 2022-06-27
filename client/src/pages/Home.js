@@ -1,36 +1,24 @@
 import { useState, useEffect } from 'react';
 import { Typography } from '@mui/material';
 import axios from 'axios';
-import DragAndDrop from '../component/DragAndDrop/DragAndDrop';
+import DragAndDropV2 from '../component/DragAndDrop/DragAndDropv2';
 import { static_items } from '../component/DragAndDrop/data';
 
 const Home = () => {
-  const demoData = {};
-  demoData['content'] = static_items;
+  const demoData = static_items;
 
   const [userBoard, setUserBoard] = useState(demoData);
 
   return (
-    <div>
+    <div style={{ marginTop: '70px' }}>
       <Typography
         textAlign='center'
-        color='info'
         variant='h5'
         component='h1'
-        sx={{ paddingTop: '5px', paddingBottom: '5px' }}>
-        DragAndDrop Demo. Add, edit, save and delete function in the future.
+        color='primary'>
+        Demo
       </Typography>
-      <Typography
-        textAlign='center'
-        color='info'
-        variant='h5'
-        component='h1'
-        sx={{ paddingTop: '5px', paddingBottom: '5px' }}>
-        Sign Up, Login and Logout functional, but dont provide additional
-        features.
-      </Typography>
-
-      <DragAndDrop userBoard={userBoard} />
+      <DragAndDropV2 userBoard={userBoard} handleBoardUpdate={setUserBoard} />
     </div>
   );
 };

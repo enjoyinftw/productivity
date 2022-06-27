@@ -24,6 +24,7 @@ const signup = async (req, res) => {
 };
 
 const authentication = async (req, res) => {
+  console.log(req.cookies.auth_token);
   try {
     const token = req.cookies.auth_token;
     if (token) {

@@ -15,8 +15,7 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const DragAndDrop = ({ userBoard }) => {
-  const [itemList, setItemList] = useState(userBoard.content);
+const DragAndDrop = ({ userBoard, setUserBoard }) => {
   const reorder = (list, startIndex, endIndex) => {
     const result = Array.from(list);
     const [removed] = result.splice(startIndex, 1);
@@ -50,10 +49,10 @@ const DragAndDrop = ({ userBoard }) => {
     const sourceIndex = result.source.index;
     const destIndex = result.destination.index;
     if (result.type === 'droppableColumn') {
-      const newItems = reorder(itemList, sourceIndex, destIndex);
-      setItemList(newItems);
+      const newItems = reorder(userBoard.content, sourceIndex, destIndex);
+      setUserBoard({ ...userBoard, content: newItems });
     } else if (result.type === 'droppableSubColumn') {
-      const itemSubItemMap = itemList.reduce((acc, item) => {
+      const colItemMap = userBoard.content.reduce((acc, item) => {
         acc[item._id] = item.columnitems;
         return acc;
       }, {});
@@ -61,32 +60,35 @@ const DragAndDrop = ({ userBoard }) => {
       const sourceParentId = result.source.droppableId;
       const destParentId = result.destination.droppableId;
 
-      const sourceSubItems = itemSubItemMap[sourceParentId];
-      const destSubItems = itemSubItemMap[destParentId];
-      let newItems = [...itemList];
+      const sourceColItems = colItemMap[sourceParentId];
+      const destColItems = colItemMap[destParentId];
+      let newColItems = [...userBoard.content];
 
       if (sourceParentId === destParentId) {
-        const reorderedSubItems = reorder(
-          sourceSubItems,
+        const reorderedColItems = reorder(
+          sourceColItems,
           sourceIndex,
           destIndex
         );
 
-        newItems = newItems.map((item) => {
+        newColItems = newColItems.map((item) => {
           if (item._id === sourceParentId) {
-            item.columnitems = reorderedSubItems;
+            item.columnitems = reorderedColItems;
           }
           return item;
         });
 
-        setItemList(newItems);
+        const newUserBoard = { ...userBoard };
+        newUserBoard.content = newColItems;
+
+        setUserBoard({ ...userBoard, newUserBoard });
       } else {
-        let newSourceSubItems = [...sourceSubItems];
+        let newSourceSubItems = [...sourceColItems];
         const [draggedItem] = newSourceSubItems.splice(sourceIndex, 1);
 
-        let newDestSubItems = [...destSubItems];
+        let newDestSubItems = [...destColItems];
         newDestSubItems.splice(destIndex, 0, draggedItem);
-        newItems.map((item) => {
+        newColItems.map((item) => {
           if (item._id === sourceParentId) {
             item.columnitems = newSourceSubItems;
           } else if (item._id === destParentId) {
@@ -94,13 +96,21 @@ const DragAndDrop = ({ userBoard }) => {
           }
           return item;
         });
-        setItemList(newItems);
+        const newUserBoard = { userBoard };
+        newUserBoard.content = newColItems;
+        setUserBoard(newUserBoard);
       }
     }
   };
 
-  const displayDragAndDrop = (itemList) => {
-    if (itemList) {
+  const handleClick = (event) => {
+    console.log(event.currentTarget);
+    console.log(event.currentTarget.id);
+    console.log(event.currentTarget.index);
+  };
+
+  const displayDragAndDrop = (content) => {
+    if (content) {
       return (
         <Box sx={{ ...style.DragAndDrop.body }}>
           <DragDropContext onDragEnd={onDragEnd}>
@@ -114,7 +124,7 @@ const DragAndDrop = ({ userBoard }) => {
                     sx={{ display: 'flex' }}
                     {...provided.droppableProps}
                     ref={provided.innerRef}>
-                    {itemList.map((column, colIndex) => (
+                    {content.map((column, colIndex) => (
                       <Draggable
                         key={column._id}
                         draggableId={column._id}
@@ -170,18 +180,23 @@ const DragAndDrop = ({ userBoard }) => {
                                   justifyContent='center'
                                   alignItems='center'>
                                   <IconButton
+                                    id='colHeaderButton'
+                                    index='2323'
+                                    onClick={handleClick}
                                     color='secondary'
                                     size='small'
                                     aria-label='add column'>
                                     <AddCircleIcon />
                                   </IconButton>
                                   <IconButton
+                                    onClick={handleClick}
                                     color='secondary'
                                     size='small'
                                     aria-label='edit column name'>
                                     <EditIcon />
                                   </IconButton>
                                   <IconButton
+                                    onClick={handleClick}
                                     color='secondary'
                                     size='small'
                                     aria-label='delete column'>
@@ -257,18 +272,21 @@ const DragAndDrop = ({ userBoard }) => {
                                                 justifyContent='center'
                                                 alignItems='center'>
                                                 <IconButton
+                                                  onClick={handleClick}
                                                   color='secondary'
                                                   size='small'
                                                   aria-label='add row'>
                                                   <AddCircleIcon />
                                                 </IconButton>
                                                 <IconButton
+                                                  onClick={handleClick}
                                                   color='secondary'
                                                   size='small'
                                                   aria-label='edit row'>
                                                   <EditIcon />
                                                 </IconButton>
                                                 <IconButton
+                                                  onClick={handleClick}
                                                   color='secondary'
                                                   size='small'
                                                   aria-label='delete row'>
@@ -314,7 +332,7 @@ const DragAndDrop = ({ userBoard }) => {
     }
   };
 
-  return <>{displayDragAndDrop(itemList)} </>;
+  return <>{displayDragAndDrop(userBoard.content)} </>;
 };
 
 export default DragAndDrop;

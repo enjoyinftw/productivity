@@ -53,11 +53,11 @@ describe('Kanban', () => {
     expect(savedBoard.content[0].columnname).toBe(
       boardData.content[0].columnname
     );
-    expect(savedBoard.content[0].columnitems[0].rowname).toBe(
-      boardData.content[0].columnitems[0].rowname
+    expect(savedBoard.content[0].columnitems[0].itemname).toBe(
+      boardData.content[0].columnitems[0].itemname
     );
-    expect(savedBoard.content[0].columnitems[0].rowdescription).toBe(
-      boardData.content[0].columnitems[0].rowdescription
+    expect(savedBoard.content[0].columnitems[0].itemdescription).toBe(
+      boardData.content[0].columnitems[0].itemdescription
     );
   });
   it('creates kanban board with multiple columns and rows and saves it successfully', async () => {
@@ -75,11 +75,11 @@ describe('Kanban', () => {
     expect(savedBoard.content[0].columnname).toBe(
       boardData.content[0].columnname
     );
-    expect(savedBoard.content[0].columnitems[0].rowname).toBe(
-      boardData.content[0].columnitems[0].rowname
+    expect(savedBoard.content[0].columnitems[0].itemname).toBe(
+      boardData.content[0].columnitems[0].itemname
     );
-    expect(savedBoard.content[0].columnitems[0].rowdescription).toBe(
-      boardData.content[0].columnitems[0].rowdescription
+    expect(savedBoard.content[0].columnitems[0].itemdescription).toBe(
+      boardData.content[0].columnitems[0].itemdescription
     );
   });
   /*

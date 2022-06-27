@@ -18,8 +18,8 @@ const kanbanSchema = mongoose.Schema({
       },
       columnitems: [
         {
-          rowname: String,
-          rowdescription: String,
+          itemname: String,
+          itemdescription: String,
         },
       ],
     },

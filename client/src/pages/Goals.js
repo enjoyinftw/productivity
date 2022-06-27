@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Typography } from '@mui/material';
-import DragAndDrop from '../component/DragAndDrop/DragAndDrop';
-import { static_items } from '../component/DragAndDrop/data';
+import KanbanBoard from '../component/KanbanBoard/KanbanBoard';
 import axios from 'axios';
 
 const Goals = () => {
@@ -30,15 +29,14 @@ const Goals = () => {
 
   return (
     <div>
-      <Typography
-        textAlign='center'
-        color='info'
-        variant='h5'
-        component='h1'
-        sx={{ paddingTop: '5px', paddingBottom: '5px' }}>
-        DragAndDrop Demo. Add, edit, save and delete function in the future.
-      </Typography>
-      {isLoading ? (
+      <KanbanBoard />
+    </div>
+  );
+};
+
+export default Goals;
+
+/*{isLoading ? (
         <Typography
           textAlign='center'
           color='info'
@@ -48,10 +46,5 @@ const Goals = () => {
           loading
         </Typography>
       ) : (
-        <DragAndDrop userBoard={userBoard} />
-      )}
-    </div>
-  );
-};
-
-export default Goals;
+        <DragAndDrop userBoard={userBoard} setUserBoard={setUserBoard} />
+      )} */

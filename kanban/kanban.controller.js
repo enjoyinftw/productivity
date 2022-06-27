@@ -6,14 +6,22 @@ const create = async (req, res) => {
     const data = req.body;
     const token = req.cookies.auth_token;
     const verifyToken = jwt.verify(token, process.env.SECRET_KEY);
-    const fullData = {
-      ...data,
-      userid: verifyToken._id,
-    };
-    const board = new Kanban(fullData);
-    await board.save();
+    if (verifyToken) {
+      const fullData = {
+        ...data,
+        userid: verifyToken._id,
+      };
+      const board = new Kanban(fullData);
+      await board.save();
 
-    res.status(201).json({ code: 201, isCreated: true, boardData: board });
+      res.status(201).json({ code: 201, isCreated: true, boardData: board });
+    } else {
+      res.status(400).json({
+        code: 400,
+        isCreated: false,
+        msg: 'invalid data or invalid syntax',
+      });
+    }
   } catch (e) {
     console.log(e);
     res.status(400).json({
@@ -91,6 +99,7 @@ const updateone = async (req, res) => {
 const deleteone = async (req, res) => {
   try {
     const data = req.body;
+
     const deleteBoard = await Kanban.findByIdAndDelete({ _id: data._id });
 
     res

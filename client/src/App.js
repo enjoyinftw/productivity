@@ -10,9 +10,6 @@ import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import AuthProvider from './component/authentication/AuthProvider';
 import ProtectedRoute from './component/authentication/ProtectedRoute';
-const { palette } = createTheme();
-const { augmentColor } = palette;
-const createColor = (mainColor) => augmentColor({ color: { main: mainColor } });
 
 const theme = createTheme({
   palette: {
