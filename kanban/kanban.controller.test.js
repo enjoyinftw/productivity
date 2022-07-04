@@ -36,7 +36,7 @@ describe('kanban controller', () => {
     const verifyToken = await jwt.verify(token, process.env.SECRET_KEY);
     const userId = verifyToken._id;
 
-    const validData = { ...staticItem1, userId: userId };
+    const validData = { ...staticItem1, userid: userId };
 
     const { body } = await request(app)
       .post('/api/v1/kanban/create')
@@ -55,14 +55,14 @@ describe('kanban controller', () => {
     const verifyToken = await jwt.verify(token, process.env.SECRET_KEY);
     const userId = verifyToken._id;
 
-    const validData1 = { ...staticItem1, userId: userId };
+    const validData1 = { ...staticItem1, userid: userId };
 
     const createEntry1 = await request(app)
       .post('/api/v1/kanban/create')
       .set('Cookie', [`auth_token=${token}`])
       .send(validData1);
 
-    const validData2 = { ...staticItem2, userId: userId };
+    const validData2 = { ...staticItem2, userid: userId };
 
     const createEntry2 = await request(app)
       .post('/api/v1/kanban/create')
@@ -85,14 +85,14 @@ describe('kanban controller', () => {
     const verifyToken = await jwt.verify(token, process.env.SECRET_KEY);
     const userId = verifyToken._id;
 
-    const validData1 = { ...staticItem1, userId: userId };
+    const validData1 = { ...staticItem1, userid: userId };
 
     const createEntry1 = await request(app)
       .post('/api/v1/kanban/create')
       .set('Cookie', [`auth_token=${token}`])
       .send(validData1);
 
-    const validData2 = { ...staticItem2, userId: userId };
+    const validData2 = { ...staticItem2, userid: userId };
 
     const createEntry2 = await request(app)
       .post('/api/v1/kanban/create')
@@ -118,7 +118,7 @@ describe('kanban controller', () => {
     const verifyToken = await jwt.verify(token, process.env.SECRET_KEY);
     const userId = verifyToken._id;
 
-    const validData1 = { ...staticItem1, userId: userId };
+    const validData1 = { ...staticItem1, userid: userId };
 
     const validEntry1 = await request(app)
       .post('/api/v1/kanban/create')
@@ -147,7 +147,7 @@ describe('kanban controller', () => {
     const verifyToken = await jwt.verify(token, process.env.SECRET_KEY);
     const userId = verifyToken._id;
 
-    const validData1 = { ...staticItem1, userId: userId };
+    const validData1 = { ...staticItem1, userid: userId };
 
     const validEntry1 = await request(app)
       .post('/api/v1/kanban/create')

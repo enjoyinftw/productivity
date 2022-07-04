@@ -7,12 +7,20 @@ const {
 } = require('../user/user.controller');
 
 const {
-  create,
-  findAll,
-  updateone,
-  deleteone,
-  findByName,
+  createKanban,
+  findAllKanban,
+  updateoneKanban,
+  deleteoneKanban,
+  findByNameKanban,
 } = require('../kanban/kanban.controller');
+
+const {
+  createLearningCard,
+  findAllLearningCard,
+  findByTopicLearningCard,
+  updateoneLearningCard,
+  deleteoneLearningCard,
+} = require('../learningcards/learningcards.controller');
 
 const router = Router();
 
@@ -22,11 +30,18 @@ router.post('/accounts/login', login);
 router.get('/accounts/authentication', authentication);
 router.get('/accounts/logout', logout);
 
-//goal related routes
-router.post('/kanban/create', create);
-router.get('/kanban/findall', findAll);
-router.get('/kanban/findbyname', findByName);
-router.put('/kanban/updateone', updateone);
-router.delete('/kanban/delete', deleteone);
+//kanban related routes
+router.post('/kanban/create', createKanban);
+router.get('/kanban/findall', findAllKanban);
+router.get('/kanban/findbyname', findByNameKanban);
+router.put('/kanban/updateone', updateoneKanban);
+router.delete('/kanban/delete', deleteoneKanban);
+
+//learningcards related routes
+router.post('/learningcards/create', createLearningCard);
+router.get('/learningcards/findall', findAllLearningCard);
+router.get('/learningcards/findbytopic', findByTopicLearningCard);
+router.put('/learningcards/updateone', updateoneLearningCard);
+router.delete('/learningcards/delete', deleteoneLearningCard);
 
 module.exports = router;

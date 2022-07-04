@@ -9,7 +9,7 @@ const { setUp, dropCollections, dropDatabase } = require('../setup/db.js');
 
 const userData = {
   username: 'enjoyin',
-  email: 'enjoyin@gmail.com',
+  email: 'enjoyin1234@gmail.com',
   password: 'lolrofl1234',
 };
 

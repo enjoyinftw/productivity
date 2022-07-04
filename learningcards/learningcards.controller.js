@@ -1,7 +1,7 @@
-const Kanban = require('./kanban.model');
+const LearningCard = require('./learningcards.model');
 const jwt = require('jsonwebtoken');
 
-const createKanban = async (req, res) => {
+const createLearningCard = async (req, res) => {
   try {
     const data = req.body;
     const token = req.cookies.auth_token;
@@ -11,10 +11,12 @@ const createKanban = async (req, res) => {
         ...data,
         userid: verifyToken._id,
       };
-      const board = new Kanban(fullData);
-      await board.save();
+      const learningCard = new LearningCard(fullData);
+      await learningCard.save();
 
-      res.status(201).json({ code: 201, isCreated: true, boardData: board });
+      res
+        .status(201)
+        .json({ code: 201, isCreated: true, cardData: learningCard });
     } else {
       res.status(400).json({
         code: 400,
@@ -32,18 +34,20 @@ const createKanban = async (req, res) => {
   }
 };
 
-const findAllKanban = async (req, res) => {
+const findAllLearningCard = async (req, res) => {
   try {
     const token = req.cookies.auth_token;
     const verifyToken = jwt.verify(token, process.env.SECRET_KEY);
-    const boardInfo = await Kanban.find({
-      userid: verifyToken._id,
-    });
-    res.status(200).json({
-      code: 200,
-      isFound: true,
-      boardData: boardInfo,
-    });
+    if (verifyToken) {
+      const cardInfo = await LearningCard.find({ userid: verifyToken._id });
+      res.status(200).json({ code: 200, isFound: true, cardData: cardInfo });
+    } else {
+      res.status(400).json({
+        code: 400,
+        isFound: false,
+        msg: 'invalid token',
+      });
+    }
   } catch (e) {
     console.log(e);
     res.status(400).json({
@@ -54,51 +58,66 @@ const findAllKanban = async (req, res) => {
   }
 };
 
-const findByNameKanban = async (req, res) => {
+const findByTopicLearningCard = async (req, res) => {
   try {
-    const { name } = req.body;
+    const { cardtopic } = req.body;
     const token = req.cookies.auth_token;
     const verifyToken = jwt.verify(token, process.env.SECRET_KEY);
-    const boardInfo = await Kanban.find({
-      userid: verifyToken._id,
-      name: name,
-    });
-    res.status(200).json({
-      code: 200,
-      isFound: true,
-      boardData: boardInfo,
-    });
+    if (verifyToken) {
+      const cardInfo = await LearningCard.find({
+        userid: verifyToken._id,
+        cardtopic: cardtopic,
+      });
+      if (cardInfo) {
+        res.status(200).json({
+          code: 200,
+          isFound: true,
+          cardData: cardInfo,
+        });
+      } else {
+        res.status(400).json({
+          code: 400,
+          isFound: false,
+          msg: 'invalid request',
+        });
+      }
+    } else {
+      res.status(400).json({
+        code: 400,
+        isFound: false,
+        msg: 'invalid request',
+      });
+    }
   } catch (e) {
     console.log(e);
     res.status(400).json({
       code: 400,
       isFound: false,
-      msg: 'invalid token',
+      msg: 'invalid request',
     });
   }
 };
 
-const updateoneKanban = async (req, res) => {
+const updateoneLearningCard = async (req, res) => {
   try {
     const token = req.cookies.auth_token;
     const verifyToken = jwt.verify(token, process.env.SECRET_KEY);
     if (verifyToken) {
       const data = req.body;
-      const boardInfo = await Kanban.findOneAndUpdate(
+      const cardInfo = await LearningCard.findOneAndUpdate(
         {
           _id: data._id,
           userid: verifyToken._id,
         },
         {
-          $set: { name: data.name, content: data.content },
+          $set: {
+            cardtopic: data.cardtopic,
+            content: data.content,
+          },
         },
-        {
-          new: true,
-        }
+        { new: true }
       );
-      res
-        .status(200)
-        .json({ code: 200, isUpdated: true, boardData: boardInfo });
+      res.status(200).json({ code: 200, isUpdated: true, cardData: cardInfo });
     } else {
       res.status(400).json({
         code: 400,
@@ -116,38 +135,36 @@ const updateoneKanban = async (req, res) => {
   }
 };
 
-const deleteoneKanban = async (req, res) => {
+const deleteoneLearningCard = async (req, res) => {
   try {
     const token = req.cookies.auth_token;
     const verifyToken = jwt.verify(token, process.env.SECRET_KEY);
     if (verifyToken) {
       const data = req.body;
-
-      const deleteBoard = await Kanban.findByIdAndDelete({
+      const deleteCard = await LearningCard.findByIdAndDelete({
         _id: data._id,
         userid: verifyToken._id,
       });
-
       res
         .status(200)
-        .json({ code: 200, isDeleted: true, boardData: deleteBoard });
+        .json({ code: 200, isDeleted: true, cardData: deleteCard });
     } else {
       res
         .status(400)
-        .json({ code: 400, isDeleted: false, msg: 'invallid data or token' });
+        .json({ code: 400, isDeleted: false, msg: 'invalid data or token' });
     }
   } catch (e) {
     console.log(e);
     res
       .status(400)
-      .json({ code: 400, isDeleted: false, msg: 'invallid data or token' });
+      .json({ code: 400, isDeleted: false, msg: 'invalid data or token' });
   }
 };
 
 module.exports = {
-  createKanban,
-  findAllKanban,
-  findByNameKanban,
-  updateoneKanban,
-  deleteoneKanban,
+  createLearningCard,
+  findAllLearningCard,
+  findByTopicLearningCard,
+  updateoneLearningCard,
+  deleteoneLearningCard,
 };
