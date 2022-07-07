@@ -33,9 +33,12 @@ const NavBar = () => {
               Productivity
             </NavButton>
           </Typography>
-          <Stack direction='row' spacing={2}>
+          <Stack direction='row' spacing={1}>
             <NavButton color='inherit' component={NavLink} to='/goals'>
               GOALS
+            </NavButton>
+            <NavButton color='inherit' component={NavLink} to='/learningcards'>
+              Learning Cards
             </NavButton>
             <NavButton color='inherit' component={NavLink} to='/dashboard'>
               DASHBOARD

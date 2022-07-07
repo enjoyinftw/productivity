@@ -4,6 +4,7 @@ import { createTheme, ThemeProvider } from '@mui/material';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import Goals from './pages/Goals';
+import FlashCards from './pages/FlashCards';
 import Layout from './component/Layout';
 import NoMatch from './pages/NoMatch';
 import Login from './pages/Login';
@@ -58,6 +59,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='learningcards'
+              element={
+                <ProtectedRoute>
+                  <FlashCards />
                 </ProtectedRoute>
               }
             />
